@@ -65,6 +65,15 @@ public class JwtUtils {
         return cookie;
     }
 
+    //SignOut passing a clean cookie
+    public ResponseCookie getCleanJwtCookie() {
+        ResponseCookie cookie = ResponseCookie.from(jwtCookie, null)
+                .path("/api")
+                .build();
+
+        return cookie;
+    }
+
     // Getting token from username
     public String generateTokenFromUsername(String username) {
         //String userName = userDetails.getUsername();
