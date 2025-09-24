@@ -70,8 +70,8 @@ public class WebSecurityConfig {
                                 .requestMatchers("/h2-console/**").permitAll()
                                 .requestMatchers("/v3/api-docs/**").permitAll()
                                 .requestMatchers("/swagger-ui/**").permitAll()
-                                .requestMatchers("/api/pubic/**").permitAll()
-                                .requestMatchers("/api/admin/**").permitAll()
+//                                .requestMatchers("/api/pubic/**").permitAll()
+//                                .requestMatchers("/api/admin/**").permitAll()
                                 .requestMatchers("/api/test/**").permitAll()
                                 .requestMatchers("/images/**").permitAll()
                                 .anyRequest().authenticated());
@@ -125,17 +125,17 @@ public class WebSecurityConfig {
 
             // Create users if not already present
             if (!userRepository.existsByUserName("user1")) {
-                User user1 = new User("user1", "user1@example.com", passwordEncoder.encode("password1"));
+                User user1 = new User(passwordEncoder.encode("password1"), "user1@example.com", "user1");
                 userRepository.save(user1);
             }
 
             if (!userRepository.existsByUserName("seller1")) {
-                User seller1 = new User("seller1", "seller1@example.com", passwordEncoder.encode("password2"));
+                User seller1 = new User(passwordEncoder.encode("password2"), "seller1@example.com", "seller1");
                 userRepository.save(seller1);
             }
 
             if (!userRepository.existsByUserName("admin")) {
-                User admin = new User("admin", "admin@example.com", passwordEncoder.encode("adminPass"));
+                User admin = new User(passwordEncoder.encode("adminPass"), "admin@example.com", "admin");
                 userRepository.save(admin);
             }
 
