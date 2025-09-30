@@ -41,7 +41,11 @@ public class User {
     @Column(name = "password")
     private String password;
 
-        public User(String password, String email, String userName) {
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, orphanRemoval = true)
+    private Cart cart;
+
+    public User(String password, String email, String userName) {
         this.password = password;
         this.email = email;
         this.userName = userName;
@@ -62,7 +66,6 @@ public class User {
                 joinColumns = @JoinColumn(name = "user_id"),
                 inverseJoinColumns = @JoinColumn(name = "address_id"))
     private List<Address> addresses = new ArrayList<>();
-
 
     @ToString.Exclude
     @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST, CascadeType.MERGE},
