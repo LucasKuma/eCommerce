@@ -15,4 +15,6 @@ public interface CartService {
     CartDTO updateProductQuantityInCart(Long productId, Integer quant);
 
     String deleteProductFromCart(Long cartId, Long productId);
+
+    void updateProductInCarts(Long cartId, Long productId);
 }
