@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/carts")
+@RequestMapping("/api")
 public class CartController {
 
     @Autowired
@@ -24,24 +24,32 @@ public class CartController {
     @Autowired
     private CartRepository cartRepository;
 
-    @PostMapping("/products/{productId}/quantity/{quant}")
+    @PostMapping("/carts/products/{productId}/quantity/{quant}")
     public ResponseEntity<CartDTO> addProductToCart(@PathVariable Long productId, @PathVariable Integer quant) {
         CartDTO cartDTO = cartService.addProductToCart(productId, quant);
         return new ResponseEntity<>(cartDTO, HttpStatus.CREATED);
     }
 
-    @GetMapping
+    @GetMapping("/carts")
     public ResponseEntity<List<CartDTO>> getCarts() {
         List<CartDTO> cartDTOS = cartService.getAllCarts();
         return new ResponseEntity<>(cartDTOS, HttpStatus.FOUND);
     }
 
-    @GetMapping("/users/cart")
+    @GetMapping("/carts/users/cart")
     public ResponseEntity<CartDTO> getCartById() {
         String emailId = authUtil.loggedInEmail();
         Cart cart = cartRepository.findCartByEmail(emailId);
         Long cartId = cart.getCartId();
         CartDTO cartDTO = cartService.getCart(emailId, cartId);
         return new ResponseEntity<>(cartDTO, HttpStatus.OK);
+    }
+
+    @PutMapping("/cart/products/{productId}/quantity/{operation}")
+    public ResponseEntity<CartDTO> updateCartProduct(@PathVariable Long productId, @PathVariable String operation) {
+        CartDTO cartDTO = cartService.updateProductQuantityInCart(productId, operation.equalsIgnoreCase("delete") ? -1 : 1);
+
+        return new ResponseEntity<>(cartDTO, HttpStatus.OK);
+
     }
 }
