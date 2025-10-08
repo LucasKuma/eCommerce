@@ -1,5 +1,6 @@
 package com.ecommerce.project.service;
 
+import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Address;
 import com.ecommerce.project.model.User;
 import com.ecommerce.project.payload.AddressDTO;
@@ -14,8 +15,6 @@ import java.util.List;
 
 @Service
 public class AddressServiceImpl implements AddressService{
-
-    private AuthUtil authUtil;
 
     @Autowired
     private AddressRepository addressRepository;
@@ -48,7 +47,12 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public AddressDTO getAddressByAddressId(Long addressId) {
-        Address address = addressRepository.findByAddressId(addressId);
+
+        Address address = addressRepository.findById(addressId).orElseThrow(
+                () -> new ResourceNotFoundException("Address", "addressId", addressId)
+        );
+
+//        Address address = addressRepository.findByAddressId(addressId);
 
         return modelMapper.map(address, AddressDTO.class);
     }
@@ -65,7 +69,12 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public AddressDTO updateAddress(Long addressId, AddressDTO address) {
-        Address addressDb = addressRepository.findByAddressId(addressId);
+
+        Address addressDb = addressRepository.findById(addressId).orElseThrow(
+                () -> new ResourceNotFoundException("Address", "addressId", addressId)
+        );
+
+//        Address addressDb = addressRepository.findByAddressId(addressId);
 
         addressDb.setCity(address.getCity());
         addressDb.setState(address.getState());
@@ -92,6 +101,4 @@ public class AddressServiceImpl implements AddressService{
     public void deleteAddress(Long addressId) {
         addressRepository.deleteById(addressId);
     }
-
-
 }
