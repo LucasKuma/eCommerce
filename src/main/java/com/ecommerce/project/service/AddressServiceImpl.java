@@ -62,4 +62,27 @@ public class AddressServiceImpl implements AddressService{
 
         return addressesDTOS;
     }
+
+    @Override
+    public AddressDTO updateAddress(Long addressId, AddressDTO address) {
+        AddressDTO addressDb = modelMapper.map(addressRepository.findByAddressId(addressId), AddressDTO.class);
+
+        addressDb.setCity(address.getCity());
+        addressDb.setState(address.getState());
+        addressDb.setPincode(address.getPincode());
+        addressDb.setStreet(address.getStreet());
+        addressDb.setBuildingName(address.getBuildingName());
+        addressDb.setCountry(address.getCountry());
+
+        Address savedAddress = addressRepository.save(modelMapper.map(addressDb, Address.class));
+
+        return modelMapper.map(savedAddress, AddressDTO.class);
+    }
+
+    @Override
+    public void deleteAddress(Long addressId) {
+        addressRepository.deleteById(addressId);
+    }
+
+
 }

@@ -1,6 +1,5 @@
 package com.ecommerce.project.controller;
 
-import com.ecommerce.project.model.Address;
 import com.ecommerce.project.model.User;
 import com.ecommerce.project.payload.AddressDTO;
 import com.ecommerce.project.service.AddressService;
@@ -49,5 +48,17 @@ public class AddressController {
         User user = authUtil.loggedInUser();
         List<AddressDTO> addressesDTOS = addressService.getUserAddresses(user);
         return new ResponseEntity<>(addressesDTOS, HttpStatus.OK);
+    }
+
+    @PutMapping("/addresses/{addressId}")
+    public ResponseEntity<AddressDTO> updateAddress(@PathVariable Long addressId, @RequestBody AddressDTO address) {
+        AddressDTO savedAddress = addressService.updateAddress(addressId, address);
+        return new ResponseEntity<>(savedAddress, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/addresses/{addressId}")
+    public ResponseEntity<Void> deleteAddress(@PathVariable Long addressId) {
+        addressService.deleteAddress(addressId);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
