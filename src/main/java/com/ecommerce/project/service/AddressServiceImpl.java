@@ -65,7 +65,7 @@ public class AddressServiceImpl implements AddressService{
 
     @Override
     public AddressDTO updateAddress(Long addressId, AddressDTO address) {
-        AddressDTO addressDb = modelMapper.map(addressRepository.findByAddressId(addressId), AddressDTO.class);
+        Address addressDb = addressRepository.findByAddressId(addressId);
 
         addressDb.setCity(address.getCity());
         addressDb.setState(address.getState());
@@ -74,7 +74,16 @@ public class AddressServiceImpl implements AddressService{
         addressDb.setBuildingName(address.getBuildingName());
         addressDb.setCountry(address.getCountry());
 
-        Address savedAddress = addressRepository.save(modelMapper.map(addressDb, Address.class));
+        Address savedAddress = addressRepository.save(addressDb);
+
+        User user = addressDb.getUser();
+
+        List<Address> userAddresses = user.getAddresses();
+
+        user.getAddresses().removeIf(ad -> ad.getAddressId().equals(addressId));
+        user.getAddresses().add(savedAddress);
+
+        userRepository.save(user);
 
         return modelMapper.map(savedAddress, AddressDTO.class);
     }
